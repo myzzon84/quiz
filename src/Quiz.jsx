@@ -13,10 +13,14 @@ const Quiz = ({ questionsArr }) => {
     const [end, setEnd] = useState(false);
     const [correctAnswers, setCorrectAnswers] = useState(0);
 
+    const cloneObj = (obj) => {
+        return JSON.parse(JSON.stringify(obj));
+    };
+
     useEffect(() => {
         correct.forEach((item) => {
             if (item !== null) {
-                let cloneAnswers = JSON.parse(JSON.stringify(answers));
+                let cloneAnswers = cloneObj(answers);
                 cloneAnswers[question] = item;
                 setAnswers(cloneAnswers);
             }
@@ -38,10 +42,6 @@ const Quiz = ({ questionsArr }) => {
         }
     }, [answers]);
 
-    const cloneObj = (obj) => {
-        return JSON.parse(JSON.stringify(obj));
-    };
-
     const optionHandler = (index, arrItem) => {
         let selected = false;
         correct.forEach((item) => {
@@ -58,6 +58,12 @@ const Quiz = ({ questionsArr }) => {
     };
 
     const nextOrReset = () => {
+        let checkAnswer = correct.filter((item) => {
+            return item !== null;
+        });
+        if (checkAnswer.length === 0) {
+            return;
+        }
         if (end) {
             setQuestion(0);
             setCorrect(
